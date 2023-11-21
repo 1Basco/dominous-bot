@@ -1,0 +1,19 @@
+{
+  "name": "dominous",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts",
+    "engine": "bun run --watch src/engineClient.ts"
+  },
+  "dependencies": {
+    "@elysiajs/eden": "^0.7.4",
+    "elysia": "^0.7.29",
+    "figlet": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.8",
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
