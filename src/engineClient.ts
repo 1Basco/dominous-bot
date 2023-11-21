@@ -2,59 +2,34 @@ import { edenTreaty } from "@elysiajs/eden";
 import { App } from ".";
 import DominoGameEngine from "./engine";
 
-const app = edenTreaty<App>("http://localhost:8000");
-// response type: { id: 1895, name: 'Skadi' }
-// const { data, error } = app.index
-//   .post({
-//     jogador: 3,
-//     mao: ["3-6", "5-5", "1-2", "0-0", "0-4", "1-6"],
-//     mesa: ["1-6", "6-6", "6-4", "4-4"],
-//     jogadas: [
-//       {
-//         jogador: 3,
-//         pedra: "6-6",
-//       },
-//       {
-//         jogador: 4,
-//         pedra: "6-4",
-//         lado: "direita",
-//       },
-//       {
-//         jogador: 1,
-//         pedra: "4-4",
-//         lado: "direita",
-//       },
-//       {
-//         jogador: 2,
-//         pedra: "1-6",
-//         lado: "esquerda",
-//       },
-//     ],
-//   })
-//   .then((response: any) => {
-//     console.log(response.data);
-//   });
+type TNewPlay = {
+  data: {
+    pedra: string;
+    lado?: string;
+  };
+};
+
+const app: any = edenTreaty<App>("http://localhost:8000");
 
 const game = new DominoGameEngine();
-function handleGame(back?: any) {
+
+function handleGame(newPlay?: TNewPlay) {
   const estado = game.getEstadoAtual();
   const jogador = estado.jogadores[estado.jogadas.length % 4].id;
-  if (back) {
+  if (newPlay) {
     if (checkIfGameIsOver()) return;
-    console.log("pedra escolhida pelo bot: ", back.data.pedra);
-    if (!back.data.lado) {
-      game.realizarJogada(jogador, back.data.pedra);
+    if (!newPlay.data.lado) {
+      game.realizarJogada(jogador, newPlay.data.pedra);
     } else {
-      game.realizarJogada(jogador, back.data.pedra, back.data.lado);
+      game.realizarJogada(jogador, newPlay.data.pedra, newPlay.data.lado);
     }
   }
   const estadoForNextPlayer = game.getEstadoForNextPlayer();
-  console.log(estadoForNextPlayer);
   app.index.post(estadoForNextPlayer).then((data: any) => {
     handleGame(data);
   });
-  console.log(estado);
-  console.log(estadoForNextPlayer);
+
+  console.log(estado.mesa);
 }
 
 function checkIfGameIsOver() {

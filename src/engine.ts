@@ -88,7 +88,10 @@ export default class DominoGameEngine {
     if (lado === "esquerda" && pedra[0] == this.state.mesa[0][0]) {
       return this.flipPedra(pedra);
     }
-    if (lado === "direita" && pedra[2] !== this.state.mesa[0][2]) {
+    if (
+      lado === "direita" &&
+      pedra[2] == this.state.mesa[this.state.mesa.length - 1][2]
+    ) {
       return this.flipPedra(pedra);
     }
     return pedra;
