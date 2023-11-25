@@ -14,9 +14,28 @@ export default function decidePlay(gameData: GameData) {
     return getHighestValueInHand(gameData.mao);
   }
   const picks = getHandAllPossiblePicks(gameData);
-  const pick = getHighestValuePick(picks);
 
-  return pick ?? {};
+  const bucha: {
+    pedra: string;
+    lado: string;
+  } | null = getBucha(picks);
+  if (bucha !== null) {
+    return {
+      pedra: bucha.pedra,
+      lado: bucha.lado,
+    };
+  }
+
+  if (picks.length > 0) {
+    const counts = countNumbers(picks, gameData.mesa);
+    const scores = calculateScores(picks, counts);
+    return {
+      pedra: scores[0].piece.pedra,
+      lado: scores[0].piece.lado,
+    };
+  }
+
+  return {};
 }
 
 function getTableSides(table: Array<String>) {
@@ -33,6 +52,34 @@ function getTableSides(table: Array<String>) {
     first,
     last,
   };
+}
+
+function countNumbers(
+  picks: Array<{ pedra: string; lado: string } | undefined>,
+  table: Array<string>
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  [...picks, ...table].flat().forEach((num: string | { pedra: string }) => {
+    if (typeof num === "string") {
+      counts[num[0]] = (counts[num[0]] || 0) + 1;
+      counts[num[2]] = (counts[num[2]] || 0) + 1;
+    } else {
+      counts[num.pedra[0]] = (counts[num.pedra[0]] || 0) + 1;
+      counts[num.pedra[2]] = (counts[num.pedra[2]] || 0) + 1;
+    }
+  });
+  return counts;
+}
+
+function calculateScores(
+  possiblePicks: Array<{ pedra: string; lado: string }>,
+  counts: Record<string, number>
+) {
+  const scores = possiblePicks.map((piece: any) => {
+    const score = counts[piece.pedra[0]] + counts[piece.pedra[2]];
+    return { piece, score };
+  });
+  return scores.sort((a: any, b: any) => b.score - a.score);
 }
 
 function getHandAllPossiblePicks(gameData: GameData) {
