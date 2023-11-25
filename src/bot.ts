@@ -41,18 +41,18 @@ function getHandAllPossiblePicks(gameData: GameData) {
   const picks: ({ pedra: string; lado: string } | undefined)[] = gameData.mao
     .map((piece: string) => {
       /*@ts-ignore*/
-      const firstSide = sides.first[0];
+      const rigthSide = sides.first[0];
       /*@ts-ignore*/
-      const lastSide = sides.last[2];
+      const leftSide = sides.last[2];
 
-      if (piece[0] === firstSide || piece[2] === firstSide) {
+      if (piece[0] === rigthSide || piece[2] === rigthSide) {
         return {
           pedra: piece,
           lado: "esquerda",
         };
       }
 
-      if (piece[0] === lastSide || piece[2] === lastSide) {
+      if (piece[0] === leftSide || piece[2] === leftSide) {
         return {
           pedra: piece,
           lado: "direita",
@@ -84,9 +84,8 @@ function getHighestValuePick(
     lado: pick.lado,
   }));
 
-  const maxValue = Math.max(...picksWithValue.map((pick: any) => pick.value));
-  const highestValuePicks = picksWithValue.filter(
-    (pick: any) => pick.value === maxValue
+  const highestValuePicks = picksWithValue.sort(
+    (a: any, b: any) => a.value - b.value
   );
 
   if (highestValuePicks.length === 0) {
@@ -111,11 +110,10 @@ function getBucha(picks: ({ pedra: string; lado: string } | undefined)[]) {
     lado: pick.lado,
   }));
 
-  const maxValue = Math.max(...picksWithValue.map((pick: any) => pick.value));
-  const highestValuePicks = picksWithValue.filter(
-    (pick: any) => pick.value === maxValue
+  const highestValuePicks = picksWithValue.sort(
+    (a: any, b: any) => b.value - a.value
   );
-  console.log("highestValuePicks: ", highestValuePicks);
+
   if (highestValuePicks.length === 0) {
     console.log("sem bucha");
     return null;

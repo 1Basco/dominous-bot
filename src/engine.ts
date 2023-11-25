@@ -32,7 +32,7 @@ export default class DominoGameEngine {
     todasAsPecas.sort(() => Math.random() - 0.5); // Embaralhar as peças
 
     this.state.jogadores.forEach((jogador) => {
-      jogador.mao = todasAsPecas.splice(0, 6); // Distribuir 6 peças para cada jogador
+      jogador.mao = todasAsPecas.splice(0, 7);
     });
   }
 
